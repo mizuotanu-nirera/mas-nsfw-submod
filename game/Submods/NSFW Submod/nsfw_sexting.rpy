@@ -496,6 +496,7 @@ label nsfw_sexting_finale:
             m 3ekbla "I want to make sure you maintain good hygiene."
 
             if not did_finish:
+
                 m 3tubla "Maybe you can think of me in the shower and...{i}finish up.{/i}"
                 m 3mubsa "I want you to feel as good as I did too~"
 
