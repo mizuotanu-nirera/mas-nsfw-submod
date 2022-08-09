@@ -23,6 +23,7 @@ label nsfw_sexting_main:
         shouldkiss = False # Used in handling of kissing logic
         shouldkiss_cooldown = 0 # Used in handling of kissing logic
         shouldchange = False # Used in handling of clothes change logic
+        shouldhug = False # Used in handling of cuddle logic
         hot_transfer = False # True if Monika has reached the requirement for hot dialogue or more
         sexy_transfer = False # True if Monika has reached the requirement for sexy dialogue only
         did_finish = True # False if the player did not finish
@@ -373,9 +374,17 @@ label nsfw_sexting_finale:
             m 6lkbfo "Two.{w=3}{nw}"
             m 6hkbfc "Mmmhmm~{w=2}{nw}"
             m 6hkbfd "One.{w=3}{nw}"
-            m 6wkbfo "Oh~{w=2}{nw}"
+            m 6skbfo "Oh~{w=2}{nw}"
             m 6skbfw "Come with me, [player]!{w=3}{nw}"
-            m 6hkbfw "Haaaaaaaaah~{w=2}"
+
+            $ orgasm_dialogue_choice = random.randint(1,3)
+
+            if orgasm_dialogue_choice == 3:
+                m 6hkbfo "Haaaaaaaaah~{w=10}{nw}"
+            elif orgasm_dialogue_choice == 2:
+                m 6hkbfo "Aaaaaaah! [player], [player], [mas_nsfw.extend_name(extend_amount = 5)]!{w=10}{nw}"
+            else:
+                m 6hkbfo "Haaaah~ [player], I love you...[mas_nsfw.extend_name(extend_amount = 10)]!!{w=10}{nw}"
             m 6hkbfsdlc "..."
             m 6hkbfsdld "..."
             m 6ekbfsdlo "Hah...hah..."
@@ -394,10 +403,44 @@ label nsfw_sexting_finale:
                 m "Did you manage to come with me?{fast}"
 
                 "Yeah.":
+                    $ did_finish = True
                     m 6hkbfa "I'm glad..."
                     m 6lkbfb "I got to share an amazing experience like this with you."
                     m 6ekbfb "That makes me more happy than you could know, [player]."
                     m 6ekbfa "I love you so much."
+
+                    # ask for cuddle
+                    python:
+                        if mas_isMoniEnamored(higher=True):
+                            afflevel = persistent._mas_affection.get("affection", 0)
+                            hugchance = int(afflevel / 100)
+                            # if affection is 10K or greater, 100% chance ask for cuddle.
+                            # if less than 10K, 1% chance to ask for cuddle for every 100 affection.
+                            if random.randint(1, 100) <= hugchance:
+                                shouldhug = True
+
+                    if shouldhug: # copied from script-compliments.rpy
+                        m 6rubfsdla "..."
+                        m 6ekbfsdlb "Say, [player]..."
+                        m 6ekbfsdla "Since we just came together..."
+                        m 6ekbfsdlb "Do you...{w=1}{nw}"
+                        extend 7ekbfsdlb "Do you think we could cuddle for a little bit?{nw}"
+                        $ _history_list.pop()
+                        menu:
+                            m "Do you think we could cuddle for a little bit?{fast}"
+                            "Sure, [m_name].":
+                                call monika_holdme_prep(lullaby=MAS_HOLDME_NO_LULLABY, stop_music=True, disable_music_menu=True)
+                                call monika_holdme_start
+                                call monika_holdme_end
+                                m 6dkbfa "Mmm...that was really nice, [player]."
+                                m 6ekbfsdlb "I can't wait until we can cuddle together like this for real."
+
+                                if persistent._mas_first_kiss:
+                                    call monika_kissing_motion_short
+                            "Not right now.":
+                                m 2ekbfsdla "I understand, [player]."
+                                m 2hubfsdlb "I imagine you must feel pretty sticky right now."
+                                extend "Ahaha!"
 
                 "No...":
                     $ did_finish = False
@@ -452,7 +495,7 @@ label nsfw_sexting_finale:
             m 3eub "You should have a shower, [mas_get_player_nickname()]."
             m 3ekbla "I want to make sure you maintain good hygiene."
 
-            if did_finish == False:
+            if not did_finish:
                 m 3tubla "Maybe you can think of me in the shower and...{i}finish up.{/i}"
                 m 3mubsa "I want you to feel as good as I did too~"
 

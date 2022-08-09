@@ -625,7 +625,7 @@ init python in mas_nsfw:
             _("Your words are so flattering to me"), #5
             _("Are you just saying that to get into my pants?{w=1.0} Ahaha! Just kidding~"), #6
             _("I love how sweet you are"), #7
-            _("I love how kind you are"), #8
+            _("You're so sweet"), #8
             _("You're a cutie pie"), #9
             _("I just want to kiss you right now"), #10
             _("I wish I could hold you right now"), #11
@@ -860,11 +860,14 @@ init python in mas_nsfw:
             ".",
         )
 
+        uncommon_endings = (
+            ", " + store.persistent.playername,
+            ", " + store.mas_get_player_nickname(),
+        )
+
         rare_endings = (
-            ", " + store.persistent.playername + ".",
-            ", " + store.mas_get_player_nickname() + ".",
-            ", " + store.persistent.playername + "~",
-            ", " + store.mas_get_player_nickname() + "~",
+            ". I love you",
+            ". I love you so much",
         )
 
         existing_endings = (
@@ -880,10 +883,12 @@ init python in mas_nsfw:
                 return ""
 
         # Otherwise, create a new ending
-        if random.randint(1,3) >= 2: # 2/3 chance to end the sentence simply with "." or "~"
-            dialogue_end = random.choice(common_endings)
-        else: # otherwise, end the sentence with player name or nickname
-            dialogue_end = random.choice(rare_endings)
+        dialogue_end = random.choice(common_endings) # 2/3 chance to end the sentence simply with "." or "~"
+        if random.randint(1,3) == 1: # 1/3 chance to say player name or nickname
+            dialogue_end = random.choice(uncommon_endings) + dialogue_end
+            # 1/15 chance to say "I love you"
+            if (random.randint(1,5) == 1) and ("love" not in dialogue_end):
+                dialogue_end = random.choice(rare_endings) + dialogue_end
 
         return dialogue_end
 
@@ -917,6 +922,8 @@ init python in mas_nsfw:
             "Hah~ ",
             "Oh~ ",
             "Mmm~ ",
+            "Haah~ ",
+            "Ahh~ ",
             "",
         )
 
@@ -926,3 +933,43 @@ init python in mas_nsfw:
             return starts_hot[random.randint(0, len(starts_hot) - 1)]
         else: # Default
             return starts_cute[random.randint(0, len(starts_cute) - 1)]
+
+    def extend_name(input_name = store.persistent.playername, extend_amount = 5, should_capitalize = False):
+        """
+        Extends a name (or other string) by a certain number of letters.
+
+        Useful for dialogue where Monika screams the player's name.
+
+        IN:
+            input_name - The string to be extended.
+                (Optional, default = the player's name as specified in the persistent)
+            extend_amount - The amount to extend out the name.
+                (Optional, default = 5. If = 0, the input string will not be changed.)
+            should_capitalize - A boolean as to whether the output should be in ALLCAPS.
+                (Optional, default = False. There is not much use for this feature as Monika is rarely ever SHOUTING.)
+
+        OUT:
+            The input string extended by the appropriate amount.
+            The last vowel in the name will be repeated an additional number of times specified by the second input.
+            For names without vowels, the last letter will be repeated.
+
+            For example, extend_name("Player", 10) will return "Playeeeeeeeeeeer".
+            Note that there are 11 e's: the original plus the 10 added by the function.
+
+        """
+        current_index = -1
+        stop_index = (- len(input_name) - 1)
+        if should_capitalize:
+            input_name = input_name.upper()
+
+        return_name = ""
+        if extend_amount <= 0 or input_name == "": # return input unmodified if input is invalid
+            return input_name
+        while current_index != stop_index: # start looping at end of name
+            if input_name[current_index] in "aiueoAIUEO": # may need to add diacritic letters later
+                return_name = input_name[:current_index] +(input_name[current_index] * extend_amount) + input_name[current_index:]
+                return return_name
+            current_index -= 1
+        # if no vowels are found, just extend last letter
+        return_name = input_name + (input_name[-1] * extend_amount)
+        return return_name
