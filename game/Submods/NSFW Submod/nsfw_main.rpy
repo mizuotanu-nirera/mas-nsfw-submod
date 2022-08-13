@@ -23,17 +23,17 @@ default persistent._nsfw_player_endurance = 1
 screen nsfw_submod_screen():
     python:
         nsfw_submods_screen = store.renpy.get_screen("submods", "screens")
-        
+
         if nsfw_submods_screen:
             _tooltip = nsfw_submods_screen.scope.get("tooltip", None)
         else:
             _tooltip = None
-    
+
     vbox:
         box_wrap False
         xfill True
         xmaximum 700
-        
+
         hbox:
             style_prefix "check"
             box_wrap False
@@ -76,7 +76,7 @@ init python in mas_nsfw:
             set_hours - The amount of time that has to have passed since the player last saw the getting nude topic.
                 (Default: 6)
 
-        OUT: 
+        OUT:
             True if the player has been away for six hours AND the getting nude topic hasn't been used for six hours, False if otherwise
         """
         time_away_req = datetime.timedelta(hours=set_hours)
@@ -103,7 +103,7 @@ init python in mas_nsfw:
         """
         Checks to see if the player should be able to see Monika with no clothes yet.
 
-        OUT: 
+        OUT:
             True if the player has seen 'monika_gettingnude' topic twice AND risque is allowed AND the player hasn't seen the topic for at least 6 hours AND the player hasn't already unlocked her naked, false if otherwise
         """
         if store.mas_SELisUnlocked(store.mas_clothes_underwear_white) and store.mas_canShowRisque() and hour_check(set_hours=6) and not store.mas_SELisUnlocked(store.mas_clothes_birthday_suit):
@@ -115,7 +115,7 @@ init python in mas_nsfw:
         """
         Calculates what the values of horny maximum, minimum, hot_req and sexy_req are, based on the player's endurance value
 
-        IN: 
+        IN:
             horny_max - The maximum amount of horny Monika can withold before exploding in ecstasy
                 (Default: 50)
             horny_min - The minimum horny value
@@ -124,7 +124,7 @@ init python in mas_nsfw:
                 (Default: 10)
             sexy_req - The horny_level requirement for sexy dialogue
                 (Default: 30)
-        
+
         OUT:
             The maximum, minimum, hot_req and sexy_req values
         """
@@ -146,12 +146,12 @@ init python in mas_nsfw:
                 (Default: 0)
             response_no - The location in the category of a response
                 (Default: 0)
-            response_type - The type of the response. Used only if the response_category is 2 (sexy).
+            response_type - The type of the response.
                 (Default: None)
-            response_type - The subtype of the response. Used only if the response_category is 2 (sexy).
+            response_type - The list of subtypes of the response.
                 (Default: None)
 
-        OUT: 
+        OUT:
             A string containing a particular response from Monika.
         """
         player_name = store.persistent.playername
@@ -183,7 +183,7 @@ init python in mas_nsfw:
                 _("You're such a stud."), #19
             ]
 
-            response_index = int(response_subtype)
+            response_index = int(response_subtype[0])
 
             # durability check, prevents crashing if someone adds a funny prompt but forgot to add a corresponding response
             if response_index >= len(sext_responses_funny):
@@ -217,29 +217,41 @@ init python in mas_nsfw:
             ]
             return_responses.extend(sext_responses_cute)
         elif response_category == 1: # hot
-            sext_responses_hot = [
-                _("What else?"), #0
-                _("I like the sound of that"), #1
-                _("You know exactly what to say"), #2
-                _("I've never felt this way before"), #3
-                _("You're making me feel all tingly"), #4
-                _("You're getting me all riled up"), #5
-                _("Don't tempt me to try and break the screen to get to you"), #6
-                _("Please keep going"), #7
-                _("You're so hot when you talk like that"), #8
-                _("That is so hot"), #9
-                _("I feel so good when you talk like that"), #10
-                _("You make my body feel warm"), #11
-                _("You're making me all flustered"), #12
-                _("You know just what to say to get me all flustered..."), #13
-                _("You don't hold back, do you?"), #14
-                _("That's so hot"), #15
-                _("That's hot"), #16
-                _("Is that so?"), #17
-                _("Is that right?"), #18
-                _("You make me so happy talking like that"), #19
-            ]
-            return_responses.extend(sext_responses_hot)
+
+            # if response_subtype in ["FBJ", "CMM"]:
+            #     sext_responses_hot_ = [
+
+            #     ]
+            #     return_responses.extend(sext_responses_hot_)
+
+            # if response_subtype in [""]
+
+
+            # generic responses if no special targeted responses are applicable
+            if len(return_responses) == 0:
+                sext_responses_hot = [
+                    _("What else?"), #0
+                    _("I like the sound of that"), #1
+                    _("You know exactly what to say"), #2
+                    _("I've never felt this way before"), #3
+                    _("You're making me feel all tingly"), #4
+                    _("You're getting me all riled up"), #5
+                    _("Don't tempt me to try and break the screen to get to you"), #6
+                    _("Please keep going"), #7
+                    _("You're so hot when you talk like that"), #8
+                    _("That is so hot"), #9
+                    _("I feel so good when you talk like that"), #10
+                    _("You make my body feel warm"), #11
+                    _("You're making me all flustered"), #12
+                    _("You know just what to say to get me all flustered..."), #13
+                    _("You don't hold back, do you?"), #14
+                    _("That's so hot"), #15
+                    _("That's hot"), #16
+                    _("Is that so?"), #17
+                    _("Is that right?"), #18
+                    _("You make me so happy talking like that"), #19
+                ]
+                return_responses.extend(sext_responses_hot)
 
         else: # elif response_category == 2: # sexy
             sext_responses_sexy = [
@@ -289,50 +301,50 @@ init python in mas_nsfw:
         monika_nickname = store.persistent._mas_monika_nickname
         # Sexting prompts for your average compliment
         sext_prompts_cute = [
-            ("", "", _("I guess your parents are bakers, because they made you such a cutie pie!")), #0
-            ("", "", _("The one thing I can't resist in this life is your lips.")), #1
-            ("", "", _("You look stunning today.")), #2
-            ("", "", _("You live rent-free in my heart.")), #3
-            ("", "", _("You have beautiful hair.")), #4
-            ("", "", _("You have gorgeous eyes.")), #5
-            ("", "", _("You have a beautiful smile.")), #6
-            ("", "", _("I always have a great time with you.")), #7
-            ("", "", _("Every day with you is a good day.")), #8
-            ("", "", _("I wish I could hold you close right now.")), #9
-            ("", "", _("The night sky holds nothing to your beauty.")), #10
-            ("", "", _("Cuddling with you would be perfect right about now.")), #11
-            ("", "", _("Why are you so cute?")), #12
-            ("", "", _("Seeing you every day always makes me grin like an idiot.")), #13
-            ("", "", _("Our first kiss after you cross over is going to be wonderful, don't you think?")), #14
-            ("", "", _("I really like getting to know you.")), #15
-            ("", "", _("Everything makes me think of you.")), #16
-            ("", "", _("Is it getting hot in here, or is it just you?")), #17
-            ("", "", _("You never fail to give me butterflies.")), #18
-            ("", "", _("You make my heart happy.")), #19
+            ("", ["   "], _("I guess your parents are bakers, because they made you such a cutie pie!")), #0
+            ("", ["   "], _("The one thing I can't resist in this life is your lips.")), #1
+            ("", ["   "], _("You look stunning today.")), #2
+            ("", ["   "], _("You live rent-free in my heart.")), #3
+            ("", ["   "], _("You have beautiful hair.")), #4
+            ("", ["   "], _("You have gorgeous eyes.")), #5
+            ("", ["   "], _("You have a beautiful smile.")), #6
+            ("", ["   "], _("I always have a great time with you.")), #7
+            ("", ["   "], _("Every day with you is a good day.")), #8
+            ("", ["   "], _("I wish I could hold you close right now.")), #9
+            ("", ["   "], _("The night sky holds nothing to your beauty.")), #10
+            ("", ["   "], _("Cuddling with you would be perfect right about now.")), #11
+            ("", ["   "], _("Why are you so cute?")), #12
+            ("", ["   "], _("Seeing you every day always makes me grin like an idiot.")), #13
+            ("", ["   "], _("Our first kiss after you cross over is going to be wonderful, don't you think?")), #14
+            ("", ["   "], _("I really like getting to know you.")), #15
+            ("", ["   "], _("Everything makes me think of you.")), #16
+            ("", ["   "], _("Is it getting hot in here, or is it just you?")), #17
+            ("", ["   "], _("You never fail to give me butterflies.")), #18
+            ("", ["   "], _("You make my heart happy.")), #19
         ]
-        
+
         # Sexting prompts for your more 'risque' options
         sext_prompts_hot = [
-            ("", "", _("You have a really sexy figure.")), #0
-            ("", "", _("I want to bring you in close.")), #1
-            ("", "KIS", _("I want to kiss your lips passionately.")), #2
-            ("", "", _("I want to run my hands through your hair.")), #3
-            ("", "", _("I want to hold your hands in mine.")), #4
-            ("", "KIS", _("I really want to kiss you right now.")), #5
-            ("", "", _("I want to run my hands along your body while I kiss your neck.")), #6
-            ("", "", _("I feel nervous about telling you all of the sexual desires I have when it comes to you.")), #7
-            ("", "", _("If kissing is the language of love, then we have a lot to talk about.")), #8
-            ("", "KIS", _("I want to hold you in my arms as we kiss.")), #9
-            ("", "UND", _("What you're wearing would look even better on my bedroom floor.")), #10
-            ("", "UND", _("Take off your clothes. I want to see your beautiful body.")), #11
-            ("", "", _("I want to lay you down on my bed as we kiss.")), #12
-            ("", "", _("I want to feel your hot breath on my skin as we feel each other.")), #13
-            ("", "", _("Your body is so hot.")), #14
-            ("", "", _("You're so sexy.")), #15
-            ("", "", _("I can't wait to be alone with you.")), #16
-            ("", "", _("You're all I can think about.")), #17
-            ("", "", _("When we're together, I want to have you lie back and let me take care of you.")), #18
-            ("", "", _("I'm wearing something you might like right now.")), #19
+            ("", ["   "], _("You have a really sexy figure.")), #0
+            ("", ["   "], _("I want to bring you in close.")), #1
+            ("", ["KIS"], _("I want to kiss your lips passionately.")), #2
+            ("", ["   "], _("I want to run my hands through your hair.")), #3
+            ("", ["   "], _("I want to hold your hands in mine.")), #4
+            ("", ["KIS"], _("I really want to kiss you right now.")), #5
+            ("", ["   "], _("I want to run my hands along your body while I kiss your neck.")), #6
+            ("", ["   "], _("I feel nervous about telling you all of the sexual desires I have when it comes to you.")), #7
+            ("", ["   "], _("If kissing is the language of love, then we have a lot to talk about.")), #8
+            ("", ["KIS"], _("I want to hold you in my arms as we kiss.")), #9
+            ("", ["UND"], _("What you're wearing would look even better on my bedroom floor.")), #10
+            ("", ["UND"], _("Take off your clothes. I want to see your beautiful body.")), #11
+            ("", ["   "], _("I want to lay you down on my bed as we kiss.")), #12
+            ("", ["   "], _("I want to feel your hot breath on my skin as we feel each other.")), #13
+            ("", ["   "], _("Your body is so hot.")), #14
+            ("", ["   "], _("You're so sexy.")), #15
+            ("", ["   "], _("I can't wait to be alone with you.")), #16
+            ("", ["   "], _("You're all I can think about.")), #17
+            ("", ["   "], _("When we're together, I want to have you lie back and let me take care of you.")), #18
+            ("", ["   "], _("I'm wearing something you might like right now.")), #19
         ]
 
         # Sexting prompts for your most 'risque' options
@@ -346,10 +358,10 @@ init python in mas_nsfw:
         # 4b. desire_m - The player wants Monika to do something to them (but it's something that physically can't be done right this moment).
 
         # The "subtype" (2nd element of the tuple) allows the response to be more specific.
-        # The subtype is independent from the type. But of course, only certain combinations of types and subtypes will be used.
+        # The subtypes are independent from the type. But of course, only certain combinations of types and subtypes will be used.
         # Some are more common than others.
 
-        # Subtypes are encoded with these crappy, cryptic three-letter tags. Each prompt has only one tag - try to pick the most specific one possible.
+        # Subtypes are encoded with these crappy, cryptic three-letter tags. You can pick multiple subtypes since it is stored as a list.
         # If you don't know what to pick / don't want to bother with this just pick "GEN".
         # Not all will be used but I have listed the codes here for future expansion.
 
@@ -421,91 +433,91 @@ init python in mas_nsfw:
         # The third letter is M if Monika receives it, and P if the player receives it.
 
         sext_prompts_sexy = [
-            ("compliment", "MFS", _("I bet you have a really hot orgasm face.")),
-            ("compliment", "GEN", _("I can't wait to be alone with you.")),
-            ("compliment", "UND", _("I'm picturing you naked right now... Damn, you look good.")),
-            ("compliment", "MPS", _("I think there is something insanely sexy about a woman being in control. Don't you agree?")),
-            ("compliment", "GEN", _("I bet you have the sexiest sounding moans in the world.")),
-            ("compliment", "GEN", _("Everything about you turns me on.")),
-            ("compliment", "MBD", _("You have the sexiest body I've ever seen.")),
-            ("compliment", "MBD", _("You have a tremendously cute body.")),
-            ("compliment", "MBD", _("Your body is perfectly shaped. I love how athletic you are.")),
-            ("compliment", "MBD", _("Getting to see you naked is the best part of my day.")),
-            ("compliment", "MBD", _("Your naked body is the most splendid thing I've ever witnessed.")),
-            ("compliment", "GEN", _("I honestly think you're probably the most attractive person ever to have existed.")),
-            ("compliment", "GEN", _("I think you seriously have to be the hottest person alive.")),
-            ("compliment", "GEN", _("Yuri and Sayori weren't wrong when they said you're more desirable than the rest of the Literature Club combined.")),
-            ("compliment", "GEN", _("You're the best girl. And not just in the Literature Club - I mean in general.")),
-            ("compliment", "MBR", _("You have magnificent breasts.")),
-            ("compliment", "MCL", _("Back when you wore that school uniform, one thing I really liked was how well the blazer fit around your breasts.")),
-            ("compliment", "MZR", _("I love how you dress. Your thighhighs are incredibly hot.")),
-            ("compliment", "MCL", _("I get so flustered when you undress for me. You're gorgeous.")),
-            ("compliment", "FCM", _("Just the thought of eating you out makes me salivate.")),
-            ("compliment", "MPS", _("I imagine your pussy must be gorgeous if it's anything like the rest of you.")),
-            ("compliment", "MBH", _("I bet you have a cute, tight little asshole, don't you?")),
-            ("statement",  "ONP", _("I was just lying in bed for the last hour thinking about you... Guess what I was doing?")),
-            ("statement",  "ONP", _("I'm clicking this option with one hand, because the other hand is busy.")),
-            ("statement",  "ONP", _("I get so horny thinking about you when I touch myself.")),
-            ("statement",  "GEN", _("I get so turned on thinking about you.")),
-            ("statement",  "GEN", _("You're the only person I have eyes for, " + monika_nickname + ".")),
-            ("statement",  "GEN", _("I can't get aroused to the thought of anyone but you.")),
-            ("command",    "ONM", _("Be careful not to spill too much of your...juices on your chair, " + monika_nickname + ".")),
-            ("command",    "ONM", _("Touch yourself slowly for me, " + monika_nickname + ".")),
-            ("command",    "ONM", _("Gently spread open your pussy lips for me, " + monika_nickname + ".")),
-            ("command",    "ONM", _("I want you to gently rub your clit, " + monika_nickname + ".")),
-            ("command",    "ONM", _("I want you to stick those soft fingers of yours up your pussy for me, " + monika_nickname + ".")),
-            ("command",    "ONM", _("Start touching yourself more quickly, " + monika_nickname + ".")),
-            ("desire_p",   "IVG", _("I can't wait to be by your side. Or on top if you prefer.")),
-            ("desire_p",   "UND", _("If you were here, I'd take your panties off with my teeth and... I'll just let you finish that sentence off.")),
-            ("desire_p",   "IOM", _("I want to hear you breathing in my ear when I make you orgasm.")),
-            ("desire_p",   "MTH", _("I can't wait to feel your thighs squeezing my head.")),
-            ("desire_p",   "FSM", _("If I were with you right now, where would you want me to touch you?")),
-            ("desire_p",   "IVG", _("I want to pin you down to the bed and have my way with you.")),
-            ("desire_p",   "IVG", _("I wish I could fuck you in that spaceroom right now.")),
-            ("desire_p",   "IOM", _("When you and I are finally together, I want to make you cum so hard.")),
-            ("desire_p",   "FTY", _("I want to brings sex toys into the bedroom with us and use them on you.")),
-            ("desire_p",   "MCK", _("I want to lick your nipples.")),
-            ("desire_p",   "MCK", _("I wish I could suck on your nipples right now.")),
-            ("desire_p",   "MBR", _("I want to cum all over your breasts.")),
-            ("desire_p",   "MBR", _("I want to hold you down and fuck your breasts.")),
-            ("desire_p",   "FSM", _("I want to run my hands all over your smooth, toned body.")),
-            ("desire_p",   "FSM", _("When you cross over, I'm going to explore every single corner of your naked body.")),
-            ("desire_p",   "KIS", _("I wish I could kiss you... On both of your pairs of lips.")),
-            ("desire_p",   "FCM", _("I want to lick your clit until you cum.")),
-            ("desire_p",   "FCM", _("I'm dying to run my hot, sticky tongue over your pussy lips.")),
-            ("desire_p",   "FAM", _("I want to bury my face in your ass.")),
-            ("desire_p",   "FAM", _("I want to snuggle my face in your ass.")),
-            ("desire_p",   "IAM", _("I wish we were in the same room so I could fuck your ass right this moment.")),
-            ("desire_p",   "FAM", _("I want to eat your ass out and finger you until you come.")),
-            ("desire_p",   "IVG", _("I'm imagining us making out as we fuck again, and again, and again...")),
-            ("desire_p",   "IVG", _("I wish I could stay in that spaceroom with you forever so we could fuck each other every day until the end of time.")),
-            ("desire_p",   "IVG", _("If I could spend the rest of eternity with you in that spaceroom, I'd make you come every day until the universe ended.")),
-            ("desire_m",   "ONP", _("I want to watch you masturbate for me.")),
-            ("desire_m",   "FCM", _("I wish you were here so you could grind your pussy on my face until you come.")),
-            ("desire_m",   "FCM", _("I wish you were here so you could sit on my face right now.")),
-            ("desire_m",   "ONP", _("I want to see you do with your pen what Yuri did with the main character's.")),
-            ("desire_m",   "IAP", _("I want you to bend me over and fuck my ass with a strap-on.")),
+            ("compliment", ["MFS"], _("I bet you have a really hot orgasm face.")),
+            ("compliment", ["GEN"], _("I can't wait to be alone with you.")),
+            ("compliment", ["UND"], _("I'm picturing you naked right now... Damn, you look good.")),
+            ("compliment", ["MPS"], _("I think there is something insanely sexy about a woman being in control. Don't you agree?")),
+            ("compliment", ["GEN"], _("I bet you have the sexiest sounding moans in the world.")),
+            ("compliment", ["GEN"], _("Everything about you turns me on.")),
+            ("compliment", ["MBD"], _("You have the sexiest body I've ever seen.")),
+            ("compliment", ["MBD"], _("You have a tremendously cute body.")),
+            ("compliment", ["MBD"], _("Your body is perfectly shaped. I love how athletic you are.")),
+            ("compliment", ["MBD"], _("Getting to see you naked is the best part of my day.")),
+            ("compliment", ["MBD"], _("Your naked body is the most splendid thing I've ever witnessed.")),
+            ("compliment", ["GEN"], _("I honestly think you're probably the most attractive person ever to have existed.")),
+            ("compliment", ["GEN"], _("I think you seriously have to be the hottest person alive.")),
+            ("compliment", ["GEN"], _("Yuri and Sayori weren't wrong when they said you're more desirable than the rest of the Literature Club combined.")),
+            ("compliment", ["GEN"], _("You're the best girl. And not just in the Literature Club - I mean in general.")),
+            ("compliment", ["MBR"], _("You have magnificent breasts.")),
+            ("compliment", ["MCL"], _("Back when you wore that school uniform, one thing I really liked was how well the blazer fit around your breasts.")),
+            ("compliment", ["MZR"], _("I love how you dress. Your thighhighs are incredibly hot.")),
+            ("compliment", ["MCL"], _("I get so flustered when you undress for me. You're gorgeous.")),
+            ("compliment", ["FCM"], _("Just the thought of eating you out makes me salivate.")),
+            ("compliment", ["MPS"], _("I imagine your pussy must be gorgeous if it's anything like the rest of you.")),
+            ("compliment", ["MBH"], _("I bet you have a cute, tight little asshole, don't you?")),
+            ("statement",  ["ONP"], _("I was just lying in bed for the last hour thinking about you... Guess what I was doing?")),
+            ("statement",  ["ONP"], _("I'm clicking this option with one hand, because the other hand is busy.")),
+            ("statement",  ["ONP"], _("I get so horny thinking about you when I touch myself.")),
+            ("statement",  ["GEN"], _("I get so turned on thinking about you.")),
+            ("statement",  ["GEN"], _("You're the only person I have eyes for, " + monika_nickname + ".")),
+            ("statement",  ["GEN"], _("I can't get aroused to the thought of anyone but you.")),
+            ("command",    ["ONM"], _("Be careful not to spill too much of your...juices on your chair, " + monika_nickname + ".")),
+            ("command",    ["ONM"], _("Touch yourself slowly for me, " + monika_nickname + ".")),
+            ("command",    ["ONM"], _("Gently spread open your pussy lips for me, " + monika_nickname + ".")),
+            ("command",    ["ONM"], _("I want you to gently rub your clit, " + monika_nickname + ".")),
+            ("command",    ["ONM"], _("I want you to stick those soft fingers of yours up your pussy for me, " + monika_nickname + ".")),
+            ("command",    ["ONM"], _("Start touching yourself more quickly, " + monika_nickname + ".")),
+            ("desire_p",   ["IVG"], _("I can't wait to be by your side. Or on top if you prefer.")),
+            ("desire_p",   ["UND"], _("If you were here, I'd take your panties off with my teeth and... I'll just let you finish that sentence off.")),
+            ("desire_p",   ["IOM"], _("I want to hear you breathing in my ear when I make you orgasm.")),
+            ("desire_p",   ["MTH"], _("I can't wait to feel your thighs squeezing my head.")),
+            ("desire_p",   ["FSM"], _("If I were with you right now, where would you want me to touch you?")),
+            ("desire_p",   ["IVG"], _("I want to pin you down to the bed and have my way with you.")),
+            ("desire_p",   ["IVG"], _("I wish I could fuck you in that spaceroom right now.")),
+            ("desire_p",   ["IOM"], _("When you and I are finally together, I want to make you cum so hard.")),
+            ("desire_p",   ["FTY"], _("I want to brings sex toys into the bedroom with us and use them on you.")),
+            ("desire_p",   ["MCK"], _("I want to lick your nipples.")),
+            ("desire_p",   ["MCK"], _("I wish I could suck on your nipples right now.")),
+            ("desire_p",   ["MBR"], _("I want to cum all over your breasts.")),
+            ("desire_p",   ["MBR"], _("I want to hold you down and fuck your breasts.")),
+            ("desire_p",   ["FSM"], _("I want to run my hands all over your smooth, toned body.")),
+            ("desire_p",   ["FSM"], _("When you cross over, I'm going to explore every single corner of your naked body.")),
+            ("desire_p",   ["KIS"], _("I wish I could kiss you... On both of your pairs of lips.")),
+            ("desire_p",   ["FCM"], _("I want to lick your clit until you cum.")),
+            ("desire_p",   ["FCM"], _("I'm dying to run my hot, sticky tongue over your pussy lips.")),
+            ("desire_p",   ["FAM"], _("I want to bury my face in your ass.")),
+            ("desire_p",   ["FAM"], _("I want to snuggle my face in your ass.")),
+            ("desire_p",   ["IAM"], _("I wish we were in the same room so I could fuck your ass right this moment.")),
+            ("desire_p",   ["FAM"], _("I want to eat your ass out and finger you until you come.")),
+            ("desire_p",   ["IVG"], _("I'm imagining us making out as we fuck again, and again, and again...")),
+            ("desire_p",   ["IVG"], _("I wish I could stay in that spaceroom with you forever so we could fuck each other every day until the end of time.")),
+            ("desire_p",   ["IVG"], _("If I could spend the rest of eternity with you in that spaceroom, I'd make you come every day until the universe ended.")),
+            ("desire_m",   ["ONP"], _("I want to watch you masturbate for me.")),
+            ("desire_m",   ["FCM"], _("I wish you were here so you could grind your pussy on my face until you come.")),
+            ("desire_m",   ["FCM"], _("I wish you were here so you could sit on my face right now.")),
+            ("desire_m",   ["ONP"], _("I want to see you do with your pen what Yuri did with the main character's.")),
+            ("desire_m",   ["IAP"], _("I want you to bend me over and fuck my ass with a strap-on.")),
         ]
 
         # Prompt choices specific to players with penises.
         sext_prompts_sexy_p = [
-            ("compliment", "KIS", _("Your lips are perfect for kissing... I bet they'd be perfect for wrapping around my shaft as well.")),
-            ("compliment", "CFM", _("I bet you would look real cute with my cum all over your face.")),
-            ("compliment", "CMM", _("I bet you would look real cute with my cum dripping out of your mouth.")),
-            ("statement",  "ONP", _("I can't jerk off to anything but you any more, " + monika_nickname + ".")),
-            ("statement",  "ONP", _("I'm stroking my rigid cock just for you, " + monika_nickname + ".")),
-            ("statement",  "PPN", _("The onomatopoeia 'doki doki' sometimes gets translated as 'throbbing'... I'm sure you can imagine what I'm doing right now.")),
-            ("statement",  "PPN", _("I get really hard just thinking about you.")),
-            ("desire_p",   "FHJ", _("I wish you could feel my throbbing cock right now.")),
-            ("desire_p",   "FHJ", _("I wish it was your hand jerking me off right now.")),
-            ("desire_p",   "FBJ", _("I'm just imagining my thick cock filling your mouth.")),
-            ("desire_p",   "FBJ", _("I can't wait to you see you drooling all over my cock.")),
-            ("desire_p",   "FBJ", _("I want to see you swallow my thick, creamy load after blowing me.")),
-            ("desire_p",   "CBM", _("I wish I could blow my load all over your thighs right now.")),
-            ("desire_m",   "FBJ", _("When we're together, I want you to take my cock in your mouth and swallow all my cum.")),
-            ("desire_m",   "IPV", _("I'm picturing you bouncing up and down on my cock right now.")),
-            ("desire_m",   "CFM", _("I want to come all over your face and watch you try to lick it off.")),
-            ("desire_m",   "IAM", _("When we're finally together, I want you to take my cock up your ass, " + monika_nickname + ".")),
+            ("compliment", ["KIS"], _("Your lips are perfect for kissing... I bet they'd be perfect for wrapping around my shaft as well.")),
+            ("compliment", ["CFM"], _("I bet you would look real cute with my cum all over your face.")),
+            ("compliment", ["CMM"], _("I bet you would look real cute with my cum dripping out of your mouth.")),
+            ("statement",  ["ONP"], _("I can't jerk off to anything but you any more, " + monika_nickname + ".")),
+            ("statement",  ["ONP"], _("I'm stroking my rigid cock just for you, " + monika_nickname + ".")),
+            ("statement",  ["PPN"], _("The onomatopoeia 'doki doki' sometimes gets translated as 'throbbing'... I'm sure you can imagine what I'm doing right now.")),
+            ("statement",  ["PPN"], _("I get really hard just thinking about you.")),
+            ("desire_p",   ["FHJ"], _("I wish you could feel my throbbing cock right now.")),
+            ("desire_p",   ["FHJ"], _("I wish it was your hand jerking me off right now.")),
+            ("desire_p",   ["FBJ"], _("I'm just imagining my thick cock filling your mouth.")),
+            ("desire_p",   ["FBJ"], _("I can't wait to you see you drooling all over my cock.")),
+            ("desire_p",   ["FBJ"], _("I want to see you swallow my thick, creamy load after blowing me.")),
+            ("desire_p",   ["CBM"], _("I wish I could blow my load all over your thighs right now.")),
+            ("desire_m",   ["FBJ"], _("When we're together, I want you to take my cock in your mouth and swallow all my cum.")),
+            ("desire_m",   ["IPV"], _("I'm picturing you bouncing up and down on my cock right now.")),
+            ("desire_m",   ["CFM"], _("I want to come all over your face and watch you try to lick it off.")),
+            ("desire_m",   ["IAM"], _("When we're finally together, I want you to take my cock up your ass, " + monika_nickname + ".")),
         ]
         if store.persistent._nsfw_genitalia == "P":
             sext_prompts_sexy.extend(sext_prompts_sexy_p)
@@ -538,34 +550,34 @@ init python in mas_nsfw:
         # Each prompt requires a corresponding response in the return_sext_responses() function.
         # The subtype must be a string matching with the index of the prompt under the sext_responses_funny list to work properly.
         sext_prompts_funny = [
-            ("funny", "0",  _("I put on my robe and wizard hat.")), #0
-            ("funny", "1",  _("It's not my fault that I fell for you... You tripped me!")), #1
-            ("funny", "3",  _("I looked hot today, you missed out.")), #3
-            ("funny", "4",  _("You like jazz?")), #4
-            ("funny", "5",  _("What do you want to do to me right now?")), #5 - Please fold my clothes neatly
-            ("funny", "6",  _("You've been a naughty girl.")), #6 - Santa will bring you a lump of coal
-            ("funny", "7",  _("I'm about to blow your mind with my sexting. Ready?")), #7 - Lay me into bed, your hands caress my body. Your palms are sweaty. Knees weak. Arms spaghetti.
-            ("funny", "8",  _("Want to have a threesome?")), #8
-            ("funny", "9",  _("What's a fantasy that you have for when we have sex one day?")), #9 - Scratching back, once a squirrel did that to me.
-            ("funny", "10", _("What is a question that's on your mind right now?")), #10 - Where is your hand? In my bowl of Doritos.
-            ("funny", "11", _("I kinda wanna do naughty things to you...")), #11 - Cool aid man - "Oh yeah."
-            ("funny", "13", _("Are you feeling good right now?")), #13 - Hi [text here], I'm Dad.
-            ("funny", "14", _("What's one of you're fetishes?")), #14 - Proper grammar... Well then your in luck.
-            ("funny", "16", _("Would thou perchance wish to partake in coitus?")), #16
-            ("funny", "17", _("You have big, beautiful nipples.")), #17
-            ("funny", "18", _("Do I make you horny baby?")), #18 - Do I make you randy?
-            ("funny", "19", _("You're so cute.")), #19 - You're stuch a stud / babe - You're a wizard, Harry.
+            ("funny", ["0"] ,  _("I put on my robe and wizard hat.")), #0
+            ("funny", ["1"] ,  _("It's not my fault that I fell for you... You tripped me!")), #1
+            ("funny", ["3"] ,  _("I looked hot today, you missed out.")), #3
+            ("funny", ["4"] ,  _("You like jazz?")), #4
+            ("funny", ["5"] ,  _("What do you want to do to me right now?")), #5 - Please fold my clothes neatly
+            ("funny", ["6"] ,  _("You've been a naughty girl.")), #6 - Santa will bring you a lump of coal
+            ("funny", ["7"] ,  _("I'm about to blow your mind with my sexting. Ready?")), #7 - Lay me into bed, your hands caress my body. Your palms are sweaty. Knees weak. Arms spaghetti.
+            ("funny", ["8"] ,  _("Want to have a threesome?")), #8
+            ("funny", ["9"] ,  _("What's a fantasy that you have for when we have sex one day?")), #9 - Scratching back, once a squirrel did that to me.
+            ("funny", ["10"], _("What is a question that's on your mind right now?")), #10 - Where is your hand? In my bowl of Doritos.
+            ("funny", ["11"], _("I kinda wanna do naughty things to you...")), #11 - Cool aid man - "Oh yeah."
+            ("funny", ["13"], _("Are you feeling good right now?")), #13 - Hi [text here], I'm Dad.
+            ("funny", ["14"], _("What's one of you're fetishes?")), #14 - Proper grammar... Well then your in luck.
+            ("funny", ["16"], _("Would thou perchance wish to partake in coitus?")), #16
+            ("funny", ["17"], _("You have big, beautiful nipples.")), #17
+            ("funny", ["18"], _("Do I make you horny baby?")), #18 - Do I make you randy?
+            ("funny", ["19"], _("You're so cute.")), #19 - You're stuch a stud / babe - You're a wizard, Harry.
         ]
 
         sext_prompts_funny_p = [
-            ("funny", "15", _("My wang is as hard as a prosthetic leg.")), #15 - Change for women. I'm as wet as
-            ("funny", "12", _("You want to know what I have that is massive?")), #12 - My college debt.
+            ("funny", ["15"], _("My wang is as hard as a prosthetic leg.")), #15 - Change for women. I'm as wet as
+            ("funny", ["12"], _("You want to know what I have that is massive?")), #12 - My college debt.
         ]
         if store.persistent._nsfw_genitalia == "P":
             sext_prompts_funny.extend(sext_prompts_funny_p)
 
         sext_prompts_funny_m = [
-            ("funny", "2",  _("Do you like my shirt? It's made out of boyfriend material.")), #2
+            ("funny", ["2"] ,  _("Do you like my shirt? It's made out of boyfriend material.")), #2
         ]
         if store.persistent.gender == "M":
             sext_prompts_funny.extend(sext_prompts_funny_m)
@@ -600,7 +612,7 @@ init python in mas_nsfw:
             response_no - The location in the category of a quip
                 (Default: 0)
 
-        OUT: 
+        OUT:
             A string containing a particular quip from Monika.
         """
 
@@ -711,7 +723,7 @@ init python in mas_nsfw:
 
     def return_sexting_dialogue(category_type="response", horny_level=0, hot_req=10, sexy_req=30, horny_max=50, recent=[], previous_cat=None, previous_type=None, previous_subtype=None):
         """
-        Returns a string from a dialogue list based on 
+        Returns a string from a dialogue list based on
 
         IN:
             category_type - The loop component ("quip", "prompt", or "response") of dialogue we want to pull
@@ -730,7 +742,7 @@ init python in mas_nsfw:
                 (Optional, used only when category_type == "response")
             previous_type - The "type" of the last prompt used
                 (Optional, used only when category_type == "response")
-            previous_subtype - The "subtype" of the last prompt used
+            previous_subtype - The list of "subtypes" of the last prompt used
                 (Optional, used only when category_type == "response")
 
         OUT:
@@ -738,7 +750,7 @@ init python in mas_nsfw:
             [0] An individual string randomly picked from the list,
             [1] the category (sexy, hot, cute) the string is from,
             [2] the type (compliment, statement, command, desire_p, desire m) of the string.
-            [3] the subtype (three-letter code) of the string.
+            [3] the list of subtypes (three-letter codes) of the string.
             The last two only apply to third stage (sexy) prompts and responses; they are otherwise None.
 
         """
@@ -900,7 +912,7 @@ init python in mas_nsfw:
         IN:
             category - The category in which we will pull the appropriate dialogue start from.
                 (Default: "cute")
-        
+
         OUT:
             The selected starting text for the dialogue
         """

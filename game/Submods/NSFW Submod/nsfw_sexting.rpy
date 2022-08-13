@@ -19,7 +19,7 @@ label nsfw_sexting_main:
         recent_quips = [] # The recent quips used
         previous_cat = None # The category of the last prompt used ("cute", "hot", or "sexy")
         previous_type = None # The "type" of the last prompt used. Only relevant in third stage.
-        previous_subtype = None # The "subtype" of the last prompt used. Only relevant in third stage.
+        previous_subtype = None # The list of "subtypes" of the last prompt used. Only relevant in third stage.
         shouldkiss = False # Used in handling of kissing logic
         shouldkiss_cooldown = 0 # Used in handling of kissing logic
         shouldchange = False # Used in handling of clothes change logic
@@ -165,7 +165,7 @@ label nsfw_sexting_main:
         python:
             if shouldkiss_cooldown > 0:
                 shouldkiss_cooldown -= 1
-            if previous_subtype == "KIS": # Override cooldown and kiss right away if the player picks a prompt that asks for a kiss
+            if "KIS" in previous_subtype: # Override cooldown and kiss right away if the player picks a prompt that asks for a kiss
                 shouldkiss = True
             elif "kiss" in player_prompt[prompt_choice] and random.randint(1,5) == 1:
                 if shouldkiss_cooldown == 0:
@@ -177,7 +177,7 @@ label nsfw_sexting_main:
             $ shouldkiss_cooldown = 5
 
         # undress if asked by player
-        if store.mas_SELisUnlocked(store.mas_clothes_underwear_white) and previous_subtype == "UND" and not hot_transfer:
+        if store.mas_SELisUnlocked(store.mas_clothes_underwear_white) and ("UND" in previous_subtype) and (not hot_transfer):
 
             python:
                 if store.mas_submod_utils.isSubmodInstalled("Auto Outfit Change"):
@@ -210,7 +210,7 @@ label nsfw_sexting_main:
             m 6hubfb "Hah~ That feels better."
             $ hot_transfer = True
 
-        elif store.mas_SELisUnlocked(store.mas_clothes_birthday_suit) and previous_subtype == "UND" and not sexy_transfer:
+        elif store.mas_SELisUnlocked(store.mas_clothes_birthday_suit) and ("UND" in previous_subtype) and (not sexy_transfer):
             call mas_clothes_change(outfit=mas_clothes_birthday_suit, outfit_mode=False, exp="6hubfb", restore_zoom=False)
             m 6hubfb "Hah~ That feels better."
             $ sexy_transfer = True
