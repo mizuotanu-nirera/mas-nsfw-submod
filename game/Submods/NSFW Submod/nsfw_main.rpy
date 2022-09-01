@@ -216,67 +216,91 @@ init python in mas_nsfw:
                 _("That's sweet"), #19
             ]
             return_responses.extend(sext_responses_cute)
+
         elif response_category == 1: # hot
+            sext_responses_hot = [
+                _("What else?"), #0
+                _("I like the sound of that"), #1
+                _("You know exactly what to say"), #2
+                _("I've never felt this way before"), #3
+                _("You're making me feel all tingly"), #4
+                _("You're getting me all riled up"), #5
+                _("Don't tempt me to try and break the screen to get to you"), #6
+                _("Please keep going"), #7
+                _("You're so hot when you talk like that"), #8
+                _("That is so hot"), #9
+                _("I feel so good when you talk like that"), #10
+                _("You make my body feel warm"), #11
+                _("You're making me all flustered"), #12
+                _("You know just what to say to get me all flustered..."), #13
+                _("You don't hold back, do you?"), #14
+                _("That's so hot"), #15
+                _("That's hot"), #16
+                _("Is that so?"), #17
+                _("Is that right?"), #18
+                _("You make me so happy talking like that"), #19
+            ]
+            return_responses.extend(sext_responses_hot)
 
-            # if response_subtype in ["FBJ", "CMM"]:
-            #     sext_responses_hot_ = [
+        else: # elif response_category == 2: # sexy
+            # Templates
 
+            # Match multiple subtypes:
+            # set_CATEGORY_subtypes = {"ZZZ", "ZZZ", "ZZZ"}
+            # if not set_CATEGORY_subtypes.isdisjoint(response_subtype):
+            #     sext_responses_hot_CATEGORY = [
+            #         _("Ahaha!"),
             #     ]
-            #     return_responses.extend(sext_responses_hot_)
+            #     return_responses.extend(set_responses_hot_CATEGORY)
 
-            # if response_subtype in [""]
+            # Match just one subtype:
+            # if "ZZZ" in response_subtype:
+            #     sext_responses_hot_CATEGORY = [
+            #         _("Ahaha!"),
+            #     ]
+            #     return_responses.extend(set_responses_hot_CATEGORY)
 
+            # Player cum related responses
+            # set_cum_subtypes = {"CFM", "COM", "CBM", "CMM", "CPM", "CAM"}
+            # if not set_cum_subtypes.isdisjoint(response_subtype):
+            #     sext_responses_hot_cum = [
+            #         _("Ahaha!"),
+            #     ]
+            #     return_responses.extend(sext_responses_hot_cum)
+
+            # Blowjob related responses
+            # set_fellatio_subtypes = {"FBJ", "CMM"}
+            # if not set_fellatio_subtypes.isdisjoint(response_subtype):
+            #     sext_responses_hot_fellatio = [
+            #         _("Ahaha!"),
+            #     ]
+            #     return_responses.extend(set_responses_hot_fellatio)
 
             # generic responses if no special targeted responses are applicable
             if len(return_responses) == 0:
-                sext_responses_hot = [
-                    _("What else?"), #0
-                    _("I like the sound of that"), #1
-                    _("You know exactly what to say"), #2
-                    _("I've never felt this way before"), #3
-                    _("You're making me feel all tingly"), #4
-                    _("You're getting me all riled up"), #5
-                    _("Don't tempt me to try and break the screen to get to you"), #6
-                    _("Please keep going"), #7
-                    _("You're so hot when you talk like that"), #8
-                    _("That is so hot"), #9
-                    _("I feel so good when you talk like that"), #10
-                    _("You make my body feel warm"), #11
-                    _("You're making me all flustered"), #12
-                    _("You know just what to say to get me all flustered..."), #13
-                    _("You don't hold back, do you?"), #14
-                    _("That's so hot"), #15
-                    _("That's hot"), #16
-                    _("Is that so?"), #17
-                    _("Is that right?"), #18
-                    _("You make me so happy talking like that"), #19
+                sext_responses_sexy = [
+                    _("You're so sexy when you talk like that"), #0
+                    _("That is so sexy"), #1
+                    _("Is that right?"), #2
+                    _("Is that so?"), #3
+                    _("Keep going"), #4
+                    _("Please don't stop"), #5
+                    _("You're getting me so turned on"), #6
+                    _("Tell me what else you want to do to me"), #7
+                    _("You're getting me so worked up"), #8
+                    _("This feels too good"), #9
+                    _("Whatever you're doing...it's working"), #10
+                    _("You just have a way with words, don't you?"), #11
+                    _("Keep talking like that"), #12
+                    _("More"), #13
+                    _("Please keep going"), #14
+                    _("When did you learn to talk like that?"), #15
+                    _("Have you always been this sexy?"), #16
+                    _("I am so wet right now"), #17
+                    _("You really know how to please a woman"), #18
+                    _("Say that again"), #19
                 ]
-                return_responses.extend(sext_responses_hot)
-
-        else: # elif response_category == 2: # sexy
-            sext_responses_sexy = [
-                _("You're so sexy when you talk like that"), #0
-                _("That is so sexy"), #1
-                _("Is that right?"), #2
-                _("Is that so?"), #3
-                _("Keep going"), #4
-                _("Please don't stop"), #5
-                _("You're getting me so turned on"), #6
-                _("Tell me what else you want to do to me"), #7
-                _("You're getting me so worked up"), #8
-                _("This feels too good"), #9
-                _("Whatever you're doing...it's working"), #10
-                _("You just have a way with words, don't you?"), #11
-                _("Keep talking like that"), #12
-                _("More"), #13
-                _("Please keep going"), #14
-                _("When did you learn to talk like that?"), #15
-                _("Have you always been this sexy?"), #16
-                _("I am so wet right now"), #17
-                _("You really know how to please a woman"), #18
-                _("Say that again"), #19
-            ]
-            return_responses.extend(sext_responses_sexy)
+                return_responses.extend(sext_responses_sexy)
 
         return return_responses
 
@@ -446,10 +470,10 @@ init python in mas_nsfw:
             ("compliment", ["MBD"], _("Your naked body is the most splendid thing I've ever witnessed.")),
             ("compliment", ["GEN"], _("I honestly think you're probably the most attractive person ever to have existed.")),
             ("compliment", ["GEN"], _("I think you seriously have to be the hottest person alive.")),
-            ("compliment", ["GEN"], _("Yuri and Sayori weren't wrong when they said you're more desirable than the rest of the Literature Club combined.")),
+            ("compliment", ["GEN"], _("Yuri and Sayori weren't wrong - you really are more desirable than the rest of the Literature Club combined.")),
             ("compliment", ["GEN"], _("You're the best girl. And not just in the Literature Club - I mean in general.")),
             ("compliment", ["MBR"], _("You have magnificent breasts.")),
-            ("compliment", ["MCL"], _("Back when you wore that school uniform, one thing I really liked was how well the blazer fit around your breasts.")),
+            ("compliment", ["MCL"], _("I really love how your school uniform fits around your breasts.")),
             ("compliment", ["MZR"], _("I love how you dress. Your thighhighs are incredibly hot.")),
             ("compliment", ["MCL"], _("I get so flustered when you undress for me. You're gorgeous.")),
             ("compliment", ["FCM"], _("Just the thought of eating you out makes me salivate.")),
@@ -550,15 +574,15 @@ init python in mas_nsfw:
         # Each prompt requires a corresponding response in the return_sext_responses() function.
         # The subtype must be a string matching with the index of the prompt under the sext_responses_funny list to work properly.
         sext_prompts_funny = [
-            ("funny", ["0"] ,  _("I put on my robe and wizard hat.")), #0
-            ("funny", ["1"] ,  _("It's not my fault that I fell for you... You tripped me!")), #1
-            ("funny", ["3"] ,  _("I looked hot today, you missed out.")), #3
-            ("funny", ["4"] ,  _("You like jazz?")), #4
-            ("funny", ["5"] ,  _("What do you want to do to me right now?")), #5 - Please fold my clothes neatly
-            ("funny", ["6"] ,  _("You've been a naughty girl.")), #6 - Santa will bring you a lump of coal
-            ("funny", ["7"] ,  _("I'm about to blow your mind with my sexting. Ready?")), #7 - Lay me into bed, your hands caress my body. Your palms are sweaty. Knees weak. Arms spaghetti.
-            ("funny", ["8"] ,  _("Want to have a threesome?")), #8
-            ("funny", ["9"] ,  _("What's a fantasy that you have for when we have sex one day?")), #9 - Scratching back, once a squirrel did that to me.
+            ("funny", ["0"] , _("I put on my robe and wizard hat.")), #0
+            ("funny", ["1"] , _("It's not my fault that I fell for you... You tripped me!")), #1
+            ("funny", ["3"] , _("I looked hot today, you missed out.")), #3
+            ("funny", ["4"] , _("You like jazz?")), #4
+            ("funny", ["5"] , _("What do you want to do to me right now?")), #5 - Please fold my clothes neatly
+            ("funny", ["6"] , _("You've been a naughty girl.")), #6 - Santa will bring you a lump of coal
+            ("funny", ["7"] , _("I'm about to blow your mind with my sexting. Ready?")), #7 - Lay me into bed, your hands caress my body. Your palms are sweaty. Knees weak. Arms spaghetti.
+            ("funny", ["8"] , _("Want to have a threesome?")), #8
+            ("funny", ["9"] , _("What's a fantasy that you have for when we have sex one day?")), #9 - Scratching back, once a squirrel did that to me.
             ("funny", ["10"], _("What is a question that's on your mind right now?")), #10 - Where is your hand? In my bowl of Doritos.
             ("funny", ["11"], _("I kinda wanna do naughty things to you...")), #11 - Cool aid man - "Oh yeah."
             ("funny", ["13"], _("Are you feeling good right now?")), #13 - Hi [text here], I'm Dad.

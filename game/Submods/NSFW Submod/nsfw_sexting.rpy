@@ -63,7 +63,7 @@ label nsfw_sexting_main:
     while True:
         python:
             # Make 3 player prompts
-            for x in range(3):
+            for x in list(range(3)):
                 player_prompt[x], prompt_cat[x], prompt_type[x], prompt_subtype[x] = mas_nsfw.return_sexting_dialogue(category_type="prompt", horny_level=horny_lvl, hot_req=hot_req, sexy_req=sexy_req, horny_max=horny_max, recent=recent_prompts)
 
             # While loop to prevent duplicates
@@ -249,7 +249,7 @@ label nsfw_sexting_main:
 
         python:
             # Add the prompts, responses and quips used by the player to a 'recently used' list, remove oldest ones from list when going above 10 items
-            for x in range(3): # Prompts
+            for x in list(range(3)): # Prompts
                 if len(recent_prompts) >= 10:
                     recent_prompts.pop()
                 recent_prompts.insert(0, player_prompt[x])
@@ -412,8 +412,8 @@ label nsfw_sexting_finale:
                     # ask for cuddle
                     python:
                         if mas_isMoniEnamored(higher=True):
-                            afflevel = persistent._mas_affection.get("affection", 0)
-                            hugchance = int(afflevel / 100)
+                            afflevel = int(persistent._mas_affection.get("affection", 0))
+                            hugchance = afflevel // 100
                             # if affection is 10K or greater, 100% chance ask for cuddle.
                             # if less than 10K, 1% chance to ask for cuddle for every 100 affection.
                             if random.randint(1, 100) <= hugchance:
